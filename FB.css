@@ -1,0 +1,196 @@
+  * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            color: #000000;
+        }
+
+        /* Header */
+        .header {
+            height: 70px;
+            background: #0055ff;
+            display: flex;
+            align-items: center;
+            padding: 0 8%;
+            color: white;
+        }
+
+        .logo {
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        .header-login {
+            margin-left: auto;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .header-login input {
+            width: 150px;
+            padding: 8px;
+            border: none;
+        }
+
+        .header-login button {
+            padding: 8px 15px;
+            border: none;
+            background: #015aff;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Main */
+        .main {
+            width: 900px;
+            max-width: 90%;
+            margin: 50px auto;
+            display: flex;
+            gap: 80px;
+        }
+
+        /* Left side */
+        .left {
+            width: 50%;
+            padding-top: 30px;
+        }
+
+        .left h1 {
+            font-size: 26px;
+            line-height: 1.4;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+        }
+
+        .icon {
+            width: 45px;
+            height: 45px;
+            border: 2px solid #aaa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-size: 22px;
+        }
+
+        .feature p {
+            margin: 0;
+            color: #000000;
+        }
+
+        /* Sign Up */
+        .signup {
+            width: 360px;
+            background: rgb(255, 255, 255);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .signup h2 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .signup p {
+            color: #000000;
+            margin-top: 8px;
+        }
+
+        .signup input {
+            width: 100%;
+            padding: 12px;
+            margin: 7px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .signup button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: none;
+            background: #2bff00;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .login-button {
+            background: #0752e9 !important;
+        }
+         .name {
+         display: flex;
+         gap: 10px;
+        }  
+
+         .name input {
+          width: 50%;
+        } 
+         .gender {
+         display: flex;
+         align-items: center;
+         margin: 10px 0;
+        }
+
+         .gender span {
+         font-weight: bold;
+        }
+
+         .gender input {
+         width: auto;
+         margin: 0 5px 0 0;
+        }
+
+         .gender label {
+         display: flex;
+         align-items: center;
+        }
+         .dob {
+         display: flex;
+         align-items: center;
+         gap: 15px;
+         margin: 10px 0;
+        }
+
+         .dob span {
+             font-weight: bold;
+        }
+
+         .dob input {
+             width: auto;
+             margin: 0;
+        }
+
+        /* Mobile */
+        @media (max-width: 750px) {
+
+            .header-login {
+                display: none;
+            }
+
+            .main {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .left {
+                width: 100%;
+            }
+
+            .signup {
+                width: 100%;
+            }
+        }

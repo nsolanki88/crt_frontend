@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Facebook</title>
+
+    <link rel="stylesheet" href="FB.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <div class="header">
+
+        <div class="logo">
+            Facebook 
+        </div>
+
+        <div class="header-login">
+            <input type="text" placeholder="Email">
+            <input type="password" placeholder="Password">
+            <button>Login</button>
+        </div>
+
+    </div>
+
+
+    <!-- Main Content -->
+    <div class="main">
+
+        <!-- Left Section -->
+        <div class="left">
+
+            <h1>
+                Connect with friends and
+                the world around you.
+            </h1>
+
+            <div class="feature">
+
+                <div class="icon"></div>
+
+                <p>
+                    <b>See photos and updates</b><br>
+                    Stay connected with your friends.
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="icon"></div>
+
+                <p>
+                    <b>Share what's new</b><br>
+                    Post updates and share your thoughts.
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="icon"></div>
+
+                <p>
+                    <b>Find more friends</b><br>
+                    Discover and connect with new people.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Sign Up Section -->
+        <div class="signup">
+
+            <h2>Sign Up</h2>
+
+            <p>It's free and always will be.</p>
+
+            <form onsubmit="return false;">
+
+                <div class="name">
+                <input type="text" placeholder="First Name">
+                <input type="text" placeholder="Last Name">
+                </div>
+                
+                <input
+                    type="email"
+                    placeholder="Email or Mobile Number"
+                    autocomplete="off"
+                >
+                <input
+                    type="email"
+                    placeholder="Re-enter email or mobile number"
+                    autocomplete="off"
+                >
+
+                <input
+                    type="password"
+                    placeholder="New Password"
+                    autocomplete="off"
+                >
+                <input
+                    type="password"
+                    placeholder="Confirm password"
+                    autocomplete="off"
+                >               
+                <div class="gender">
+                    <span>Gender:</span>
+                
+                    <label>
+                        <input type="radio" name="gender" value="male">
+                        Male
+                    </label>
+                
+                    <label>
+                        <input type="radio" name="gender" value="female">
+                        Female
+                    </label>
+                </div>
+
+                <div class="DOB">
+                    <span>DOB:</span>
+                    <input type="date" name="DOB">
+                </div>                
+
+                 <button type="submit">
+                 Sign Up
+                 </button>
+
+                <button
+                    type="button"
+                    class="login-button">
+                    Log In
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ludo Board</title>
+  <style>
+    /* ── Reset & page ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #1a1a2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* ════════════════════════════════════════
+       BOARD  — 15 × 15 grid
+    ════════════════════════════════════════ */
+    .board {
+      display: grid;
+      grid-template-columns: repeat(15, 1fr);
+      grid-template-rows:    repeat(15, 1fr);
+      width:  min(90vmin, 660px);
+      height: min(90vmin, 660px);
+      border: 4px solid #111;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,.7);
+      background: #fff;
+    }
+
+    /* ── Generic cell ── */
+    .cell {
+      border: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: #fff;
+    }
+
+    /* ════════════════════════════════════════
+       HOME ZONES  (6 × 6 corners)
+    ════════════════════════════════════════ */
+    /* Red  — top-left     col 1-6  row 1-6  */
+    .home-red    { background: #e53935; border-color: #b71c1c; }
+    /* Green — top-right   col 10-15 row 1-6  */
+    .home-green  { background: #43a047; border-color: #1b5e20; }
+    /* Yellow— bottom-left col 1-6  row 10-15 */
+    .home-yellow { background: #fdd835; border-color: #f57f17; }
+    /* Blue  — bottom-right col 10-15 row 10-15 */
+    .home-blue   { background: #1e88e5; border-color: #0d47a1; }
+
+    /* Inner nest (4 × 4 white card inside each home) */
+    .nest {
+      grid-column: span 4;
+      grid-row:    span 4;
+      /* positioned via JS — easier to do with nested divs */
+    }
+
+    /* ── Home inner white area ── */
+    .home-inner {
+      position: absolute;
+      inset: 14%;
+      background: #ffffffcc;
+      border-radius: 8px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows:    1fr 1fr;
+      padding: 10%;
+      gap: 12%;
+    }
+
+    /* ── Token circles inside home ── */
+    .token {
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      border: 3px solid rgba(0,0,0,.3);
+      box-shadow: inset 0 3px 6px rgba(255,255,255,.5), 0 2px 4px rgba(0,0,0,.4);
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .token:hover { transform: scale(1.12); box-shadow: 0 4px 12px rgba(0,0,0,.5); }
+    .token-red    { background: radial-gradient(circle at 35% 35%, #ff6b6b, #c62828); }
+    .token-green  { background: radial-gradient(circle at 35% 35%, #69f0ae, #1b5e20); }
+    .token-yellow { background: radial-gradient(circle at 35% 35%, #fff176, #f57f17); }
+    .token-blue   { background: radial-gradient(circle at 35% 35%, #82b1ff, #0d47a1); }
+
+    /* ════════════════════════════════════════
+       SAFE-STAR cells
+    ════════════════════════════════════════ */
+    .safe::after {
+      content: '★';
+      font-size: clamp(8px, 1.5vmin, 14px);
+      color: #555;
+      pointer-events: none;
+    }
+
+    /* ════════════════════════════════════════
+       COLOURED PATH CELLS
+    ════════════════════════════════════════ */
+    .path-red    { background: #ef9a9a; }
+    .path-green  { background: #a5d6a7; }
+    .path-yellow { background: #fff59d; }
+    .path-blue   { background: #90caf9; }
+
+    /* ════════════════════════════════════════
+       HOME TRIANGLE (centre column/row arrow)
+    ════════════════════════════════════════ */
+    .tri-red    { background: linear-gradient(to bottom right, #e53935 50%, #fff 50%); }
+    .tri-green  { background: linear-gradient(to bottom left,  #43a047 50%, #fff 50%); }
+    .tri-yellow { background: linear-gradient(to top right,    #fdd835 50%, #fff 50%); }
+    .tri-blue   { background: linear-gradient(to top left,     #1e88e5 50%, #fff 50%); }
+
+    /* ════════════════════════════════════════
+       CENTRE FINISH SQUARE  (6 × 6 span)
+    ════════════════════════════════════════ */
+    .finish {
+      grid-column: 7 / 10;
+      grid-row:    7 / 10;
+      border: 2px solid #aaa;
+      background: conic-gradient(
+        #e53935 0deg 90deg,
+        #43a047 90deg 180deg,
+        #fdd835 180deg 270deg,
+        #1e88e5 270deg 360deg
+      );
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      border: none;
+    }
+
+    /* ════════════════════════════════════════
+       ARROW INDICATORS on entry columns/rows
+    ════════════════════════════════════════ */
+    .arrow { font-size: clamp(8px, 1.8vmin, 16px); color: #444; line-height: 1; }
+  </style>
+</head>
+<body>
+
+<div class="board" id="board"></div>
+
+<script>
+/* ══════════════════════════════════════════════════
+   Build a 15×15 Ludo board programmatically
+   Grid: col 1–15, row 1–15  (1-indexed)
+══════════════════════════════════════════════════ */
+
+const board = document.getElementById('board');
+
+// ── helpers ──────────────────────────────────────
+const idx = (c, r) => `${c},${r}`;   // "col,row" key
+
+// Sets for each zone / colour path
+const homeRedCells    = range2d(1, 6, 1, 6);
+const homeGreenCells  = range2d(10, 15, 1, 6);
+const homeYellowCells = range2d(1, 6, 10, 15);
+const homeBlueCells   = range2d(10, 15, 10, 15);
+
+function range2d(c1, c2, r1, r2) {
+  const s = new Set();
+  for (let c = c1; c <= c2; c++)
+    for (let r = r1; r <= r2; r++)
+      s.add(idx(c, r));
+  return s;
+}
+
+// Coloured path cells (the entry/finish columns)
+const pathRed    = new Set([...cols(7, 1, 5),  ...cols(7, 7, 11)].map(([c,r])=>idx(c,r)));  // col 7 rows 1–5 + 7–11... actually build properly:
+const pathRedSet    = buildPath('red');
+const pathGreenSet  = buildPath('green');
+const pathYellowSet = buildPath('yellow');
+const pathBlueSet   = buildPath('blue');
+
+function buildPath(color) {
+  const s = new Set();
+  // Red:    col 8, rows 2–7   (top entry column going down toward center)
+  // Green:  row 8, cols 9–14  (right entry row going left)
+  // Yellow: col 8, rows 9–14  (bottom entry column going up)
+  // Blue:   row 8, cols 1–6   (left entry row going right — already white)
+  if (color === 'red')    for (let r = 2; r <= 7; r++)   s.add(idx(8, r));
+  if (color === 'green')  for (let c = 9; c <= 14; c++)  s.add(idx(c, 8));
+  if (color === 'yellow') for (let r = 9; r <= 14; r++)  s.add(idx(8, r));
+  if (color === 'blue')   for (let c = 2; c <= 7; c++)   s.add(idx(c, 8));
+  return s;
+}
+
+// Safe stars (canonical Ludo safe squares)
+const safeSquares = new Set([
+  idx(2,1), idx(6,3), idx(9,2),  idx(14,3),
+  idx(3,6), idx(1,9), idx(3,9),
+  idx(13,7), idx(15,7),
+  idx(7,13), idx(9,14),
+  idx(12,7),
+  // standard 8 safe squares on outer ring:
+  idx(2,7), idx(7,2),   // red side
+  idx(13,2), idx(9,7),  // green side  (actually row 7, col 9… approx)
+  idx(13,9), idx(9,14), // yellow side
+  idx(7,13), idx(2,9),  // blue side
+].filter(Boolean));
+
+// Actual Ludo board standard safe squares (positions on the outer track)
+// The 8 starred squares on a real board:
+const SAFE = new Set([
+  idx(2,7),  idx(7,2),   // near red home
+  idx(9,2),  idx(14,7),  // near green home
+  idx(14,9), idx(9,14),  // near yellow home
+  idx(7,14), idx(2,9),   // near blue home
+  idx(8,8),              // center-ish (not real, just decorative)
+]);
+
+// Triangle (coloured home-run) cells in the centre column/row
+// Red:    col 8, row 7   → pointing down  (triangle tip toward center)
+// Green:  col 9, row 8   → pointing left
+// Yellow: col 8, row 9   → pointing up
+// Blue:   col 7, row 8   → pointing right
+const TRI = {
+  [idx(8,7)]: 'tri-red',
+  [idx(9,8)]: 'tri-green',
+  [idx(8,9)]: 'tri-yellow',
+  [idx(7,8)]: 'tri-blue',
+};
+
+// Finish (centre 3×3)
+const FINISH_COLS = [7,8,9], FINISH_ROWS = [7,8,9];
+const finishCells = new Set(FINISH_COLS.flatMap(c => FINISH_ROWS.map(r => idx(c,r))));
+
+// Arrow characters for path entry cells
+const ARROWS = {
+  [idx(8,1)]:  '▼',  // red enters col 8 going down
+  [idx(15,8)]: '◀',  // green enters row 8 going left
+  [idx(8,15)]: '▲',  // yellow enters col 8 going up
+  [idx(1,8)]:  '▶',  // blue enters row 8 going right
+};
+
+// ── Home-inner positions (the white inner card)
+// Each home covers a 6×6. The inner 4×4 inner white card occupies cols/rows 2–5 within the zone.
+// We mark the 6×6 "anchor" cell (top-left of each 6×6) and render a special div spanning 4×4.
+// Since we're using a flat grid, we just mark specific cells within each home as the inner container.
+// We'll build a special 4×4 overlay cell at col 2 row 2 (red), col 11 row 2 (green), etc.
+const HOME_INNER = {
+  red:    { c: 2, r: 2 },
+  green:  { c: 11, r: 2 },
+  yellow: { c: 2, r: 11 },
+  blue:   { c: 11, r: 11 },
+};
+
+// ── Build all 225 cells ───────────────────────────
+for (let r = 1; r <= 15; r++) {
+  for (let c = 1; c <= 15; c++) {
+    const key = idx(c, r);
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.dataset.col = c;
+    cell.dataset.row = r;
+
+    // ── Finish centre (3×3 merged via single element spanning the whole area)
+    if (c === 7 && r === 7) {
+      const finish = document.createElement('div');
+      finish.className = 'finish';
+      finish.style.cssText = `
+        grid-column: 7 / 10;
+        grid-row: 7 / 10;
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+      `;
+      // We'll handle the finish as a pseudo-overlay later; skip for now
+    }
+
+    // ── Home zone colouring ──
+    let homeColor = null;
+    if (homeRedCells.has(key))    homeColor = 'red';
+    if (homeGreenCells.has(key))  homeColor = 'green';
+    if (homeYellowCells.has(key)) homeColor = 'yellow';
+    if (homeBlueCells.has(key))   homeColor = 'blue';
+
+    if (homeColor) cell.classList.add(`home-${homeColor}`);
+
+    // Home inner white card — only rendered at the "anchor" cell, spanning 4×4
+    const innerPos = Object.entries(HOME_INNER).find(([, pos]) => pos.c === c && pos.r === r);
+    if (innerPos) {
+      cell.style.gridColumn = `${c} / ${c + 4}`;
+      cell.style.gridRow    = `${r} / ${r + 4}`;
+      cell.style.zIndex     = '1';
+      // Add the 4 token circles
+      const inner = document.createElement('div');
+      inner.className = 'home-inner';
+      const color = innerPos[0];
+      for (let i = 0; i < 4; i++) {
+        const token = document.createElement('div');
+        token.className = `token token-${color}`;
+        token.title = `${capitalize(color)} token ${i + 1}`;
+        inner.appendChild(token);
+      }
+      cell.appendChild(inner);
+      board.appendChild(cell);
+      continue; // don't append again below
+    }
+
+    // Skip cells that are "eaten" by the spanning home-inner cell
+    // (cells at col 2-5 row 2-5 except col=2 row=2 for red, etc.)
+    if (isHiddenBySpan(c, r)) {
+      board.appendChild(cell); // still need a cell to keep grid intact → make it invisible
+      cell.style.display = 'none';
+      continue;
+    }
+
+    // ── Finish diamond (centre 3×3 becomes one element) ──
+    if (finishCells.has(key)) {
+      if (c === 7 && r === 7) {
+        cell.style.gridColumn = '7 / 10';
+        cell.style.gridRow    = '7 / 10';
+        cell.style.zIndex     = '2';
+        cell.classList.remove('cell');
+        cell.className = 'cell finish';
+        cell.style.border = 'none';
+        board.appendChild(cell);
+        continue;
+      } else {
+        cell.style.display = 'none';
+        board.appendChild(cell);
+        continue;
+      }
+    }
+
+    // ── Coloured path cells ──
+    if (pathRedSet.has(key))    cell.classList.add('path-red');
+    if (pathGreenSet.has(key))  cell.classList.add('path-green');
+    if (pathYellowSet.has(key)) cell.classList.add('path-yellow');
+    if (pathBlueSet.has(key))   cell.classList.add('path-blue');
+
+    // ── Triangle tip cells ──
+    if (TRI[key]) cell.classList.add(TRI[key]);
+
+    // ── Safe star ──
+    if (SAFE.has(key)) cell.classList.add('safe');
+
+    // ── Arrow cells ──
+    if (ARROWS[key]) {
+      const arrow = document.createElement('span');
+      arrow.className = 'arrow';
+      arrow.textContent = ARROWS[key];
+      cell.appendChild(arrow);
+    }
+
+    board.appendChild(cell);
+  }
+}
+
+// ── Helpers ──────────────────────────────────────
+function cols(c, r1, r2) {
+  const arr = [];
+  for (let r = r1; r <= r2; r++) arr.push([c, r]);
+  return arr;
+}
+
+function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+/**
+ * Returns true if the cell at (c,r) is visually "covered" by a spanning home-inner element.
+ * The anchor cells (top-left of 4×4) are NOT hidden — they carry the span themselves.
+ */
+function isHiddenBySpan(c, r) {
+  // Red inner: cols 2-5, rows 2-5 — anchor = (2,2)
+  if (c >= 2 && c <= 5 && r >= 2 && r <= 5 && !(c === 2 && r === 2)) return true;
+  // Green inner: cols 11-14, rows 2-5 — anchor = (11,2)
+  if (c >= 11 && c <= 14 && r >= 2 && r <= 5 && !(c === 11 && r === 2)) return true;
+  // Yellow inner: cols 2-5, rows 11-14 — anchor = (2,11)
+  if (c >= 2 && c <= 5 && r >= 11 && r <= 14 && !(c === 2 && r === 11)) return true;
+  // Blue inner: cols 11-14, rows 11-14 — anchor = (11,11)
+  if (c >= 11 && c <= 14 && r >= 11 && r <= 14 && !(c === 11 && r === 11)) return true;
+  // Finish centre: cols 7-9, rows 7-9 — anchor = (7,7)
+  if (c >= 7 && c <= 9 && r >= 7 && r <= 9 && !(c === 7 && r === 7)) return true;
+  return false;
+}
+</script>
+</body>
+</html>

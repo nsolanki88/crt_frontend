@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spotify Web Player</title>
+  <link rel="stylesheet" href="spotify.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- ───────────── APP SHELL ───────────── -->
+  <div class="app">
+
+    <!-- ══════════ LEFT SIDEBAR ══════════ -->
+    <aside class="sidebar">
+
+      <!-- Nav block -->
+      <div class="sidebar__nav card">
+        <a href="#" class="nav-link nav-link--active">
+          <i class="fa-solid fa-house"></i>
+          <span>Home</span>
+        </a>
+        <a href="#" class="nav-link">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span>Search</span>
+        </a>
+      </div>
+
+      <!-- Library block -->
+      <div class="sidebar__library card">
+        <div class="library__header">
+          <button class="btn-icon" title="Your Library">
+            <i class="fa-solid fa-book-bookmark"></i>
+            <span>Your Library</span>
+          </button>
+          <div class="library__actions">
+            <button class="btn-icon btn-icon--round" title="Create playlist or folder">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+            <button class="btn-icon btn-icon--round" title="Show more">
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter pills -->
+        <div class="library__filters">
+          <button class="pill pill--active">Playlists</button>
+          <button class="pill">Podcasts</button>
+          <button class="pill">Albums</button>
+          <button class="pill">Artists</button>
+        </div>
+
+        <!-- Library list -->
+        <div class="library__list">
+
+          <div class="library__item">
+            <div class="library__item-thumb library__item-thumb--gradient">
+              <i class="fa-solid fa-heart"></i>
+            </div>
+            <div class="library__item-info">
+              <p class="library__item-name">Liked Songs</p>
+              <p class="library__item-meta">Playlist · 312 songs</p>
+            </div>
+          </div>
+
+          <div class="library__item">
+            <img src="https://i.scdn.co/image/ab67706f000000027b4f53c7059db5f7a1b6d770" alt="Daily Mix 1" class="library__item-thumb" />
+            <div class="library__item-info">
+              <p class="library__item-name">Daily Mix 1</p>
+              <p class="library__item-meta">Playlist · Spotify</p>
+            </div>
+          </div>
+
+          <div class="library__item">
+            <img src="https://i.scdn.co/image/ab67706f00000002d1dabed1a4943820a4e07c1d" alt="Chill Hits" class="library__item-thumb" />
+            <div class="library__item-info">
+              <p class="library__item-name">Chill Hits</p>
+              <p class="library__item-meta">Playlist · Spotify</p>
+            </div>
+          </div>
+
+          <div class="library__item">
+            <img src="https://i.scdn.co/image/ab67706f00000002b30c9e4eca36a3e131023e88" alt="Top 50 Global" class="library__item-thumb" />
+            <div class="library__item-info">
+              <p class="library__item-name">Top 50 · Global</p>
+              <p class="library__item-meta">Playlist · Spotify</p>
+            </div>
+          </div>
+
+          <div class="library__item">
+            <img src="https://i.scdn.co/image/ab67706f00000002a72e6f56a73e3942ae4b984d" alt="RapCaviar" class="library__item-thumb" />
+            <div class="library__item-info">
+              <p class="library__item-name">RapCaviar</p>
+              <p class="library__item-meta">Playlist · Spotify</p>
+            </div>
+          </div>
+
+          <div class="library__item">
+            <img src="https://i.scdn.co/image/ab67706f0000000278c0eb67fe7f8f9c7a4e39cf" alt="Hot Country" class="library__item-thumb" />
+            <div class="library__item-info">
+              <p class="library__item-name">Hot Country</p>
+              <p class="library__item-meta">Playlist · Spotify</p>
+            </div>
+          </div>
+
+          <div class="library__item">
+            <img src="https://i.scdn.co/image/ab6761610000e5eb5e98dc3b9a4a64b82f1c2bfb" alt="The Weeknd" class="library__item-thumb" />
+            <div class="library__item-info">
+              <p class="library__item-name">The Weeknd</p>
+              <p class="library__item-meta">Artist</p>
+            </div>
+          </div>
+
+          <div class="library__item">
+            <img src="https://i.scdn.co/image/ab67616d0000b2733e3b6dcf4a0b1fba28d09b40" alt="After Hours" class="library__item-thumb library__item-thumb--square" />
+            <div class="library__item-info">
+              <p class="library__item-name">After Hours</p>
+              <p class="library__item-meta">Album · The Weeknd</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ══════════ MAIN CONTENT ══════════ -->
+    <main class="main" id="mainContent">
+
+      <!-- Sticky topbar -->
+      <header class="topbar">
+        <div class="topbar__nav">
+          <button class="btn-icon btn-icon--round btn-icon--dark" id="btnBack" title="Go back">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <button class="btn-icon btn-icon--round btn-icon--dark" id="btnForward" title="Go forward">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+
+        <!-- Search bar (visible on search page) -->
+        <div class="topbar__search" id="topbarSearch" style="display:none;">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" placeholder="What do you want to listen to?" id="searchInput" />
+        </div>
+
+        <div class="topbar__right">
+          <button class="btn-pill btn-pill--white">Explore Premium</button>
+          <button class="btn-icon btn-icon--round btn-icon--dark">
+            <i class="fa-solid fa-download"></i>
+          </button>
+          <button class="btn-icon btn-icon--round btn-icon--dark">
+            <i class="fa-solid fa-bell"></i>
+          </button>
+          <div class="user-avatar" title="Profile">R</div>
+        </div>
+      </header>
+
+      <!-- ─── HOME PAGE ─── -->
+      <div class="page" id="homePage">
+
+        <!-- Greeting section -->
+        <section class="greeting-section">
+          <h2 class="section-title" id="greetingText">Good evening</h2>
+          <div class="greeting-grid">
+            <div class="greeting-card" data-track="Liked Songs" data-artist="Various Artists" data-img="https://misc.scdn.co/liked-songs/liked-songs-640.png">
+              <img src="https://misc.scdn.co/liked-songs/liked-songs-640.png" alt="Liked Songs" />
+              <span>Liked Songs</span>
+              <button class="greeting-play-btn"><i class="fa-solid fa-play"></i></button>
+            </div>
+            <div class="greeting-card" data-track="Daily Mix 1" data-artist="Spotify" data-img="https://i.scdn.co/image/ab67706f000000027b4f53c7059db5f7a1b6d770">
+              <img src="https://i.scdn.co/image/ab67706f000000027b4f53c7059db5f7a1b6d770" alt="Daily Mix 1" />
+              <span>Daily Mix 1</span>
+              <button class="greeting-play-btn"><i class="fa-solid fa-play"></i></button>
+            </div>
+            <div class="greeting-card" data-track="Top 50 · Global" data-artist="Spotify" data-img="https://i.scdn.co/image/ab67706f00000002b30c9e4eca36a3e131023e88">
+              <img src="https://i.scdn.co/image/ab67706f00000002b30c9e4eca36a3e131023e88" alt="Top 50" />
+              <span>Top 50 · Global</span>
+              <button class="greeting-play-btn"><i class="fa-solid fa-play"></i></button>
+            </div>
+            <div class="greeting-card" data-track="Chill Hits" data-artist="Spotify" data-img="https://i.scdn.co/image/ab67706f00000002d1dabed1a4943820a4e07c1d">
+              <img src="https://i.scdn.co/image/ab67706f00000002d1dabed1a4943820a4e07c1d" alt="Chill Hits" />
+              <span>Chill Hits</span>
+              <button class="greeting-play-btn"><i class="fa-solid fa-play"></i></button>
+            </div>
+            <div class="greeting-card" data-track="RapCaviar" data-artist="Spotify" data-img="https://i.scdn.co/image/ab67706f00000002a72e6f56a73e3942ae4b984d">
+              <img src="https://i.scdn.co/image/ab67706f00000002a72e6f56a73e3942ae4b984d" alt="RapCaviar" />
+              <span>RapCaviar</span>
+              <button class="greeting-play-btn"><i class="fa-solid fa-play"></i></button>
+            </div>
+            <div class="greeting-card" data-track="Hot Country" data-artist="Spotify" data-img="https://i.scdn.co/image/ab67706f0000000278c0eb67fe7f8f9c7a4e39cf">
+              <img src="https://i.scdn.co/image/ab67706f0000000278c0eb67fe7f8f9c7a4e39cf" alt="Hot Country" />
+              <span>Hot Country</span>
+              <button class="greeting-play-btn"><i class="fa-solid fa-play"></i></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Recently Played -->
+        <section class="content-section">
+          <div class="section-header">
+            <h2 class="section-title">Recently played</h2>
+            <a href="#" class="section-more">Show all</a>
+          </div>
+          <div class="cards-row" id="recentlyPlayed">
+
+            <div class="music-card" data-track="After Hours" data-artist="The Weeknd" data-img="https://i.scdn.co/image/ab67616d0000b2733e3b6dcf4a0b1fba28d09b40">
+              <div class="music-card__img-wrap">
+                <img src="https://i.scdn.co/image/ab67616d0000b2733e3b6dcf4a0b1fba28d09b40" alt="After Hours" />
+                <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <p class="music-card__title">After Hours</p>
+              <p class="music-card__sub">The Weeknd</p>
+            </div>
+
+            <div class="music-card" data-track="Blinding Lights" data-artist="The Weeknd" data-img="https://i.scdn.co/image/ab67616d0000b2734718e2b124f79258be7bc452">
+              <div class="music-card__img-wrap">
+                <img src="https://i.scdn.co/image/ab67616d0000b2734718e2b124f79258be7bc452" alt="Blinding Lights" />
+                <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <p class="music-card__title">Blinding Lights</p>
+              <p class="music-card__sub">The Weeknd</p>
+            </div>
+
+            <div class="music-card" data-track="Shape of You" data-artist="Ed Sheeran" data-img="https://i.scdn.co/image/ab67616d0000b273ba5db46f4b838ef6027e6f96">
+              <div class="music-card__img-wrap">
+                <img src="https://i.scdn.co/image/ab67616d0000b273ba5db46f4b838ef6027e6f96" alt="Shape of You" />
+                <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <p class="music-card__title">Shape of You</p>
+              <p class="music-card__sub">Ed Sheeran</p>
+            </div>
+
+            <div class="music-card" data-track="Levitating" data-artist="Dua Lipa" data-img="https://i.scdn.co/image/ab67616d0000b2732a038d3bf875d23e4aeaa84e">
+              <div class="music-card__img-wrap">
+                <img src="https://i.scdn.co/image/ab67616d0000b2732a038d3bf875d23e4aeaa84e" alt="Future Nostalgia" />
+                <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <p class="music-card__title">Levitating</p>
+              <p class="music-card__sub">Dua Lipa</p>
+            </div>
+
+            <div class="music-card" data-track="Montero" data-artist="Lil Nas X" data-img="https://i.scdn.co/image/ab67616d0000b273be82673b5f79d9658ec0a9fd">
+              <div class="music-card__img-wrap">
+                <img src="https://i.scdn.co/image/ab67616d0000b273be82673b5f79d9658ec0a9fd" alt="Montero" />
+                <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <p class="music-card__title">Montero</p>
+              <p class="music-card__sub">Lil Nas X</p>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Made for You -->
+        <section class="content-section">
+          <div class="section-header">
+            <h2 class="section-title">Made For You</h2>
+            <a href="#" class="section-more">Show all</a>
+          </div>
+          <div class="cards-row">
+
+            <div class="music-card" data-track="Daily Mix 1" data-artist="Spotify" data-img="https://i.scdn.co/image/ab67706f000000027b4f53c7059db5f7a1b6d770">
+              <div class="music-card__img-wrap">
+                <img src="https://i.scdn.co/image/ab67706f000000027b4f53c7059db5f7a1b6d770" alt="Daily Mix 1" />
+                <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <p class="music-card__title">Daily Mix 1</p>
+              <p class="music-card__sub">The Weeknd, Drake, Post Malone and more</p>
+            </div>
+
+            <div class="music-card" data-track="Daily Mix 2" data-artist="Spotify" data-img="https://i.scdn.co/image/ab67706f00000002d1dabed1a4943820a4e07c1d">
+              <div class="music-card__img-wrap">
+                <img src="https://i.scdn.co/image/ab67706f00000002d1dabed1a4943820a4e07c1d" alt="Daily Mix 2" />
+                <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <p class="music-card__title">Daily Mix 2</p>
+              <p class="music-card__sub">Ed Sheeran, Adele, Coldplay and more</p>
+            </div>
+
+            <div class="music-card" data-track="Discover Weekly" data-artist="Spotify" data-img="https://i.scdn.co/image/ab67706f00000002b30c9e4eca36a3e131023e88">
+              <div class="music-card__img-wrap">
+                <img src="https://i.scdn.co/image/ab67706f00000002b30c9e4eca36a3e131023e88" alt="Discover Weekly" />
+                <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <p class="music-card__title">Discover Weekly</p>
+              <p class="music-card__sub">Your weekly mixtape of fresh music</p>
+            </div>
+
+            <div class="music-card" data-track="Release Radar" data-artist="Spotify" data-img="https://i.scdn.co/image/ab67706f00000002a72e6f56a73e3942ae4b984d">
+              <div class="music-card__img-wrap">
+                <img src="https://i.scdn.co/image/ab67706f00000002a72e6f56a73e3942ae4b984d" alt="Release Radar" />
+                <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <p class="music-card__title">Release Radar</p>
+              <p class="music-card__sub">Catch all the latest music from artists you follow</p>
+            </div>
+
+            <div class="music-card" data-track="On Repeat" data-artist="Spotify" data-img="https://i.scdn.co/image/ab67706f0000000278c0eb67fe7f8f9c7a4e39cf">
+              <div class="music-card__img-wrap">
+                <img src="https://i.scdn.co/image/ab67706f0000000278c0eb67fe7f8f9c7a4e39cf" alt="On Repeat" />
+                <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <p class="music-card__title">On Repeat</p>
+              <p class="music-card__sub">Songs you can't stop listening to</p>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Popular Artists -->
+        <section class="content-section">
+          <div class="section-header">
+            <h2 class="section-title">Popular artists</h2>
+            <a href="#" class="section-more">Show all</a>
+          </div>
+          <div class="cards-row">
+
+            <div class="music-card" data-track="The Weeknd" data-artist="Artist" data-img="https://i.scdn.co/image/ab6761610000e5eb5e98dc3b9a4a64b82f1c2bfb">
+              <div class="music-card__img-wrap music-card__img-wrap--circle">
+                <img src="https://i.scdn.co/image/ab6761610000e5eb5e98dc3b9a4a64b82f1c2bfb" alt="The Weeknd" />
+                <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <p class="music-card__title">The Weeknd</p>
+              <p class="music-card__sub">Artist</p>
+            </div>
+
+            <div class="music-card" data-track="Drake" data-artist="Artist" data-img="https://i.scdn.co/image/ab6761610000e5eb4293385d324db8558179afd9">
+              <div class="music-card__img-wrap music-card__img-wrap--circle">
+                <img src="https://i.scdn.co/image/ab6761610000e5eb4293385d324db8558179afd9" alt="Drake" />
+                <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <p class="music-card__title">Drake</p>
+              <p class="music-card__sub">Artist</p>
+            </div>
+
+            <div class="music-card" data-track="Ed Sheeran" data-artist="Artist" data-img="https://i.scdn.co/image/ab6761610000e5eb3bcef85e105dfc42399ef0ba">
+              <div class="music-card__img-wrap music-card__img-wrap--circle">
+                <img src="https://i.scdn.co/image/ab6761610000e5eb3bcef85e105dfc42399ef0ba" alt="Ed Sheeran" />
+                <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <p class="music-card__title">Ed Sheeran</p>
+              <p class="music-card__sub">Artist</p>
+            </div>
+
+            <div class="music-card" data-track="Dua Lipa" data-artist="Artist" data-img="https://i.scdn.co/image/ab6761610000e5ebb55d3f5b9f6ef2bf052e1ca4">
+              <div class="music-card__img-wrap music-card__img-wrap--circle">
+                <img src="https://i.scdn.co/image/ab6761610000e5ebb55d3f5b9f6ef2bf052e1ca4" alt="Dua Lipa" />
+                <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <p class="music-card__title">Dua Lipa</p>
+              <p class="music-card__sub">Artist</p>
+            </div>
+
+            <div class="music-card" data-track="Billie Eilish" data-artist="Artist" data-img="https://i.scdn.co/image/ab6761610000e5eb53b3e9f4e6c4ff03a52b28e5">
+              <div class="music-card__img-wrap music-card__img-wrap--circle">
+                <img src="https://i.scdn.co/image/ab6761610000e5eb53b3e9f4e6c4ff03a52b28e5" alt="Billie Eilish" />
+                <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <p class="music-card__title">Billie Eilish</p>
+              <p class="music-card__sub">Artist</p>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Trending Now -->
+        <section class="content-section">
+          <div class="section-header">
+            <h2 class="section-title">Trending now</h2>
+            <a href="#" class="section-more">Show all</a>
+          </div>
+          <div class="cards-row">
+
+            <div class="music-card" data-track="As It Was" data-artist="Harry Styles" data-img="https://i.scdn.co/image/ab67616d0000b273b46f74097655d7f353caab14">
+              <div class="music-card__img-wrap">
+                <img src="https://i.scdn.co/image/ab67616d0000b273b46f74097655d7f353caab14" alt="As It Was" />
+                <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <p class="music-card__title">As It Was</p>
+              <p class="music-card__sub">Harry Styles</p>
+            </div>
+
+            <div class="music-card" data-track="Anti-Hero" data-artist="Taylor Swift" data-img="https://i.scdn.co/image/ab67616d0000b273bb54dde68cd23e2a268ae0f5">
+              <div class="music-card__img-wrap">
+                <img src="https://i.scdn.co/image/ab67616d0000b273bb54dde68cd23e2a268ae0f5" alt="Midnights" />
+                <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <p class="music-card__title">Anti-Hero</p>
+              <p class="music-card__sub">Taylor Swift</p>
+            </div>
+
+            <div class="music-card" data-track="Flowers" data-artist="Miley Cyrus" data-img="https://i.scdn.co/image/ab67616d0000b273f429549123dbe8552764ba1d">
+              <div class="music-card__img-wrap">
+                <img src="https://i.scdn.co/image/ab67616d0000b273f429549123dbe8552764ba1d" alt="Flowers" />
+                <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <p class="music-card__title">Flowers</p>
+              <p class="music-card__sub">Miley Cyrus</p>
+            </div>
+
+            <div class="music-card" data-track="Unholy" data-artist="Sam Smith" data-img="https://i.scdn.co/image/ab67616d0000b2735ef878a782c987e4a84db7d8">
+              <div class="music-card__img-wrap">
+                <img src="https://i.scdn.co/image/ab67616d0000b2735ef878a782c987e4a84db7d8" alt="Unholy" />
+                <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <p class="music-card__title">Unholy</p>
+              <p class="music-card__sub">Sam Smith, Kim Petras</p>
+            </div>
+
+            <div class="music-card" data-track="Cupid" data-artist="FIFTY FIFTY" data-img="https://i.scdn.co/image/ab67616d0000b2730a551e4a46dd97bdd7b7b2e5">
+              <div class="music-card__img-wrap">
+                <img src="https://i.scdn.co/image/ab67616d0000b2730a551e4a46dd97bdd7b7b2e5" alt="Cupid" />
+                <button class="card-play-btn"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <p class="music-card__title">Cupid (Twin Ver.)</p>
+              <p class="music-card__sub">FIFTY FIFTY</p>
+            </div>
+
+          </div>
+        </section>
+
+      </div><!-- /homePage -->
+
+      <!-- ─── SEARCH PAGE ─── -->
+      <div class="page" id="searchPage" style="display:none;">
+        <h2 class="section-title" style="margin-bottom:24px;">Browse all</h2>
+        <div class="genre-grid">
+          <div class="genre-card" data-genre="Pop"              data-color="#e91429" style="background:#e91429;">Pop</div>
+          <div class="genre-card" data-genre="Hip-Hop"          data-color="#8d67ab" style="background:#8d67ab;">Hip-Hop</div>
+          <div class="genre-card" data-genre="R&amp;B"          data-color="#1e3264" style="background:#1e3264;">R&amp;B</div>
+          <div class="genre-card" data-genre="Dance/Electronic" data-color="#ba5d07" style="background:#ba5d07;">Dance/Electronic</div>
+          <div class="genre-card" data-genre="Latin"            data-color="#147a4f" style="background:#147a4f;">Latin</div>
+          <div class="genre-card" data-genre="Rock"             data-color="#e8115b" style="background:#e8115b;">Rock</div>
+          <div class="genre-card" data-genre="Soul"             data-color="#503750" style="background:#503750;">Soul</div>
+          <div class="genre-card" data-genre="Classical"        data-color="#0d73ec" style="background:#0d73ec;">Classical</div>
+          <div class="genre-card" data-genre="Podcasts"         data-color="#477d95" style="background:#477d95;">Podcasts</div>
+          <div class="genre-card" data-genre="Country"          data-color="#e13300" style="background:#e13300;">Country</div>
+          <div class="genre-card" data-genre="Jazz"             data-color="#27856a" style="background:#27856a;">Jazz</div>
+          <div class="genre-card" data-genre="K-Pop"            data-color="#af2896" style="background:#af2896;">K-Pop</div>
+          <div class="genre-card" data-genre="Metal"            data-color="#1e3264" style="background:#1e3264;">Metal</div>
+          <div class="genre-card" data-genre="Folk &amp; Acoustic" data-color="#ba5d07" style="background:#ba5d07;">Folk &amp; Acoustic</div>
+          <div class="genre-card" data-genre="Workout"          data-color="#148a08" style="background:#148a08;">Workout</div>
+          <div class="genre-card" data-genre="Indie"            data-color="#7d4b07" style="background:#7d4b07;">Indie</div>
+        </div>
+      </div>
+
+      <!-- ─── GENRE DETAIL PAGE ─── -->
+      <div class="page" id="genrePage" style="display:none;">
+        <!-- Hero header (color injected by JS) -->
+        <div class="genre-hero" id="genreHero">
+          <h1 class="genre-hero__title" id="genreHeroTitle">Pop</h1>
+        </div>
+
+        <!-- Controls row -->
+        <div class="playlist-controls">
+          <button class="ctrl-btn ctrl-btn--play ctrl-btn--play-big" id="genrePlayBtn">
+            <i class="fa-solid fa-play"></i>
+          </button>
+          <button class="btn-icon playlist-controls__heart" id="genreHeart">
+            <i class="fa-regular fa-heart"></i>
+          </button>
+          <button class="btn-icon playlist-controls__more">
+            <i class="fa-solid fa-ellipsis"></i>
+          </button>
+        </div>
+
+        <!-- Track list table -->
+        <table class="track-table">
+          <thead>
+            <tr>
+              <th class="track-table__num">#</th>
+              <th>Title</th>
+              <th class="track-table__album">Album</th>
+              <th class="track-table__date">Date added</th>
+              <th class="track-table__dur"><i class="fa-regular fa-clock"></i></th>
+            </tr>
+          </thead>
+          <tbody id="genreTrackList">
+            <!-- Rows injected by JS -->
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+
+    <!-- ══════════ RIGHT PANEL (Now Playing) ══════════ -->
+    <aside class="now-playing-panel" id="nowPlayingPanel">
+      <div class="np-header">
+        <span>Now Playing</span>
+        <button class="btn-icon" id="closeNowPlaying"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="np-art">
+        <img src="https://i.scdn.co/image/ab67616d0000b2733e3b6dcf4a0b1fba28d09b40" alt="Now Playing Art" id="npArt" />
+      </div>
+      <div class="np-info">
+        <div class="np-title-row">
+          <div>
+            <p class="np-track" id="npTrack">After Hours</p>
+            <p class="np-artist" id="npArtist">The Weeknd</p>
+          </div>
+          <button class="btn-icon np-heart" id="npHeart"><i class="fa-regular fa-heart"></i></button>
+        </div>
+      </div>
+      <div class="np-queue">
+        <p class="np-queue-title">Next in queue</p>
+        <div class="np-queue-item">
+          <img src="https://i.scdn.co/image/ab67616d0000b2734718e2b124f79258be7bc452" alt="Blinding Lights" />
+          <div>
+            <p>Blinding Lights</p>
+            <p>The Weeknd</p>
+          </div>
+        </div>
+        <div class="np-queue-item">
+          <img src="https://i.scdn.co/image/ab67616d0000b273ba5db46f4b838ef6027e6f96" alt="Shape of You" />
+          <div>
+            <p>Shape of You</p>
+            <p>Ed Sheeran</p>
+          </div>
+        </div>
+        <div class="np-queue-item">
+          <img src="https://i.scdn.co/image/ab67616d0000b2732a038d3bf875d23e4aeaa84e" alt="Levitating" />
+          <div>
+            <p>Levitating</p>
+            <p>Dua Lipa</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </div><!-- /app -->
+
+  <!-- ══════════ BOTTOM PLAYER BAR ══════════ -->
+  <footer class="player">
+
+    <!-- Left: track info -->
+    <div class="player__left">
+      <img class="player__thumb" src="https://i.scdn.co/image/ab67616d0000b2733e3b6dcf4a0b1fba28d09b40" alt="Now Playing" id="playerThumb" />
+      <div class="player__track-info">
+        <p class="player__track-name" id="playerTrack">After Hours</p>
+        <p class="player__track-artist" id="playerArtist">The Weeknd</p>
+      </div>
+      <button class="btn-icon player__heart" id="playerHeart" title="Save to Liked Songs">
+        <i class="fa-regular fa-heart"></i>
+      </button>
+      <button class="btn-icon" title="Picture-in-Picture">
+        <i class="fa-regular fa-window-restore"></i>
+      </button>
+    </div>
+
+    <!-- Center: controls + progress -->
+    <div class="player__center">
+      <div class="player__controls">
+        <button class="btn-icon ctrl-btn" id="btnShuffle" title="Shuffle">
+          <i class="fa-solid fa-shuffle"></i>
+        </button>
+        <button class="btn-icon ctrl-btn" id="btnPrev" title="Previous">
+          <i class="fa-solid fa-backward-step"></i>
+        </button>
+        <button class="btn-icon ctrl-btn ctrl-btn--play" id="btnPlay" title="Play">
+          <i class="fa-solid fa-play"></i>
+        </button>
+        <button class="btn-icon ctrl-btn" id="btnNext" title="Next">
+          <i class="fa-solid fa-forward-step"></i>
+        </button>
+        <button class="btn-icon ctrl-btn" id="btnRepeat" title="Repeat">
+          <i class="fa-solid fa-repeat"></i>
+        </button>
+      </div>
+      <div class="player__progress">
+        <span class="player__time" id="currentTime">0:00</span>
+        <div class="progress-bar" id="progressBar">
+          <div class="progress-bar__fill" id="progressFill"></div>
+          <div class="progress-bar__thumb" id="progressThumb"></div>
+        </div>
+        <span class="player__time" id="totalTime">3:45</span>
+      </div>
+    </div>
+
+    <!-- Right: extra controls -->
+    <div class="player__right">
+      <button class="btn-icon ctrl-btn ctrl-btn--sm" title="Now Playing View" id="btnNowPlaying">
+        <i class="fa-solid fa-music"></i>
+      </button>
+      <button class="btn-icon ctrl-btn ctrl-btn--sm" title="Lyrics">
+        <i class="fa-solid fa-microphone-lines"></i>
+      </button>
+      <button class="btn-icon ctrl-btn ctrl-btn--sm" title="Queue">
+        <i class="fa-solid fa-list"></i>
+      </button>
+      <button class="btn-icon ctrl-btn ctrl-btn--sm" title="Connect to device">
+        <i class="fa-solid fa-computer"></i>
+      </button>
+      <button class="btn-icon ctrl-btn ctrl-btn--sm" id="btnMute" title="Mute">
+        <i class="fa-solid fa-volume-high"></i>
+      </button>
+      <div class="volume-bar">
+        <div class="progress-bar" id="volumeBar">
+          <div class="progress-bar__fill" id="volumeFill" style="width:70%"></div>
+          <div class="progress-bar__thumb" id="volumeThumb" style="left:70%"></div>
+        </div>
+      </div>
+      <button class="btn-icon ctrl-btn ctrl-btn--sm" title="Full screen">
+        <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+      </button>
+    </div>
+
+  </footer>
+
+  <script src="spotify.js"></script>
+</body>
+</html>

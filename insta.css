@@ -1,0 +1,103 @@
+ * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #fafafa;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Main Login Box */
+        .login-box {
+            width: 402px;
+            margin: 40px auto 10px;
+            padding: 50px 40px 25px;
+            background: white;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        /* Logo */
+        .logo {
+            font-family: cursive;
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 50px;
+        }
+
+        /* Input Fields */
+        .login-box input {
+            width: 100%;
+            padding: 12px 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* Login Button */
+        .login-btn {
+            width: 100%;
+            padding: 11px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #b5d9f5;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* OR Section */
+        .or {
+            display: flex;
+            align-items: center;
+            margin: 28px 0;
+            color: #999;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .or::before,
+        .or::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .or span {
+            margin: 0 15px;
+        }
+
+        /* Facebook Login */
+        .facebook-login {
+            color: #142c68;
+            font-weight: bold;
+            margin: 30px 0;
+            cursor: pointer;
+        }
+
+        /* Forgot Password */
+        .forgot {
+            color: #555;
+            font-size: 14px;
+            margin-top: 30px;
+        }
+
+        /* Signup Box */
+        .signup-box {
+            width: 402px;
+            margin: 0 auto;
+            padding: 30px;
+            background: white;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        .signup-box a {
+            color: #00a9f4;
+            font-weight: bold;
+            text-decoration: none;
+        }
