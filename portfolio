@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="description" content="A thoughtful digital portfolio for a designer and front-end developer." />
+	<title>Alex Morgan - Designer & Developer</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+		:root {
+			--ink: #101312;
+			--muted: #69716c;
+			--paper: #f4f4ee;
+			--lime: #d7f27c;
+			--orange: #ff754b;
+			--line: rgba(16, 19, 18, 0.16);
+			--display: 'Manrope', sans-serif;
+			--mono: 'DM Mono', monospace;
+		}
+
+		* { box-sizing: border-box; margin: 0; padding: 0; }
+		html { scroll-behavior: smooth; }
+		body { background: var(--paper); color: var(--ink); font-family: var(--display); }
+		a { color: inherit; text-decoration: none; }
+		img { display: block; width: 100%; height: 100%; object-fit: cover; }
+		button { border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+
+		.shell { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+		.eyebrow { color: var(--muted); font: 500 11px/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+		.topbar { align-items: center; display: flex; justify-content: space-between; padding: 28px 0; }
+		.logo { font-size: 17px; font-weight: 800; letter-spacing: -.05em; }
+		.logo span { color: var(--orange); }
+		.nav { align-items: center; display: flex; gap: 32px; font: 500 12px var(--mono); }
+		.nav a { transition: color .2s ease; }
+		.nav a:hover { color: var(--orange); }
+		.menu { display: none; font: 500 12px var(--mono); }
+
+		.hero { border-top: 1px solid var(--line); display: grid; gap: 44px; grid-template-columns: 1.22fr .78fr; padding: 84px 0 118px; }
+		.hero h1 { font-size: clamp(54px, 8.1vw, 112px); font-weight: 700; letter-spacing: -.095em; line-height: .92; max-width: 790px; }
+		.hero h1 em { color: var(--orange); font-style: normal; }
+		.hero-copy { align-self: end; padding-bottom: 7px; }
+		.hero-copy p { color: #39413c; font-size: 16px; line-height: 1.65; max-width: 315px; }
+		.hero-link { display: inline-flex; gap: 12px; margin-top: 30px; border-bottom: 1px solid var(--ink); padding-bottom: 8px; font: 500 12px var(--mono); }
+		.hero-link span { color: var(--orange); }
+
+		.feature { border-top: 1px solid var(--line); display: grid; grid-template-columns: .75fr 1.25fr; gap: 32px; padding: 22px 0 104px; }
+		.feature-image { aspect-ratio: 1.8 / 1; background: #dad8ce; overflow: hidden; }
+		.feature-image img { filter: saturate(.8); transition: transform .5s ease; }
+		.feature-image:hover img { transform: scale(1.03); }
+		.feature-info { align-self: end; display: flex; flex-direction: column; gap: 15px; }
+		.feature-title { font-size: 32px; letter-spacing: -.06em; line-height: 1; }
+		.feature-info p { color: var(--muted); font-size: 14px; line-height: 1.55; max-width: 330px; }
+		.tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 4px; }
+		.tag { border: 1px solid var(--line); border-radius: 100px; color: var(--muted); font: 11px var(--mono); padding: 8px 11px; }
+
+		.work { background: var(--ink); color: var(--paper); padding: 88px 0 108px; }
+		.section-head { align-items: end; display: flex; justify-content: space-between; margin-bottom: 38px; }
+		.section-head .eyebrow { color: #9ca59d; }
+		.section-head h2 { font-size: clamp(36px, 5vw, 66px); letter-spacing: -.08em; line-height: .95; }
+		.section-note { color: #9ca59d; font: 11px/1.5 var(--mono); max-width: 150px; text-align: right; }
+		.project-grid { display: grid; gap: 42px 24px; grid-template-columns: repeat(2, 1fr); }
+		.project-image { aspect-ratio: 1.32 / 1; margin-bottom: 17px; overflow: hidden; }
+		.project-image img { filter: saturate(.75); transition: filter .35s ease, transform .5s ease; }
+		.project:hover .project-image img { filter: saturate(1); transform: scale(1.035); }
+		.project-meta { align-items: baseline; display: flex; justify-content: space-between; }
+		.project-name { font-size: 19px; font-weight: 600; letter-spacing: -.04em; }
+		.project-type { color: #8f9891; font: 11px var(--mono); }
+
+		.about { display: grid; grid-template-columns: .85fr 1.15fr; gap: 48px; padding: 100px 0 114px; }
+		.about h2 { font-size: clamp(38px, 5vw, 70px); letter-spacing: -.08em; line-height: .94; max-width: 400px; }
+		.about-copy { display: grid; gap: 30px; max-width: 500px; }
+		.about-copy p { color: #475049; font-size: 19px; letter-spacing: -.025em; line-height: 1.45; }
+		.facts { border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(3, 1fr); padding-top: 18px; }
+		.fact strong { display: block; font-size: 29px; letter-spacing: -.07em; }
+		.fact span { color: var(--muted); font: 11px var(--mono); }
+
+		.contact { background: var(--lime); padding: 82px 0 88px; }
+		.contact h2 { font-size: clamp(45px, 8vw, 104px); letter-spacing: -.1em; line-height: .88; max-width: 850px; }
+		.contact-bottom { align-items: end; display: flex; justify-content: space-between; margin-top: 66px; }
+		.contact-bottom p { max-width: 270px; font-size: 14px; line-height: 1.5; }
+		.socials { display: flex; gap: 22px; font: 11px var(--mono); }
+		.socials a { border-bottom: 1px solid var(--ink); padding-bottom: 5px; }
+		footer { background: var(--lime); border-top: 1px solid rgba(16, 19, 18, .2); display: flex; justify-content: space-between; padding: 16px 0 24px; font: 10px var(--mono); }
+
+		@media (max-width: 700px) {
+			.shell { width: min(100% - 36px, 560px); }
+			.topbar { padding: 22px 0; }
+			.nav { display: none; }
+			.menu { display: block; }
+			.nav.is-open { background: var(--ink); color: var(--paper); display: flex; flex-direction: column; gap: 18px; padding: 22px; position: absolute; right: 18px; top: 62px; z-index: 2; }
+			.hero { display: block; padding: 63px 0 84px; }
+			.hero h1 { font-size: clamp(52px, 17vw, 90px); }
+			.hero-copy { margin-top: 42px; }
+			.feature, .about { display: block; padding-bottom: 78px; }
+			.feature-info { margin-top: 20px; }
+			.work { padding: 67px 0 78px; }
+			.section-head { align-items: start; display: block; }
+			.section-note { margin-top: 18px; text-align: left; }
+			.project-grid { display: block; }
+			.project { margin-bottom: 38px; }
+			.about { padding-top: 76px; }
+			.about-copy { margin-top: 42px; }
+			.contact { padding-top: 68px; }
+			.contact-bottom { align-items: start; display: block; margin-top: 52px; }
+			.socials { margin-top: 30px; }
+			footer { font-size: 9px; }
+		}
+	</style>
+</head>
+<body>
+	<header class="shell topbar">
+		<a class="logo" href="#top">AM<span>.</span></a>
+		<nav class="nav" id="nav-links" aria-label="Main navigation">
+			<a href="#work">Work</a>
+			<a href="#about">About</a>
+			<a href="#contact">Contact</a>
+		</nav>
+		<button class="menu" id="menu-button" aria-expanded="false" aria-controls="nav-links">Menu +</button>
+	</header>
+
+	<main id="top">
+		<section class="shell hero">
+			<div>
+				<p class="eyebrow">Independent designer / developer</p>
+				<h1>I make digital things feel <em>human.</em></h1>
+			</div>
+			<div class="hero-copy">
+				<p>I am Alex Morgan, a multidisciplinary creative building warm, useful identities and digital experiences for people with something worth saying.</p>
+				<a class="hero-link" href="#work">Scroll to explore <span>↓</span></a>
+			</div>
+		</section>
+
+		<section class="shell feature" aria-label="Featured project">
+			<p class="eyebrow">01 / Featured project</p>
+			<div class="feature-info">
+				<div class="feature-image"><img src="https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=1400&q=85" alt="Bright editorial design work laid out on a desk" /></div>
+				<h2 class="feature-title">Field Notes</h2>
+				<p>A new visual language and editorial web experience for a journal about slow travel, good food, and the art of noticing.</p>
+				<div class="tags"><span class="tag">Brand identity</span><span class="tag">Web design</span><span class="tag">2025</span></div>
+			</div>
+		</section>
+
+		<section class="work" id="work">
+			<div class="shell">
+				<div class="section-head">
+					<div><p class="eyebrow">Selected work</p><h2>A few good<br />projects.</h2></div>
+					<p class="section-note">A small selection from the last few years of making things.</p>
+				</div>
+				<div class="project-grid">
+					<a class="project" href="#contact"><div class="project-image"><img src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=1000&q=85" alt="Colorful branding materials" /></div><div class="project-meta"><span class="project-name">Morrow Studio</span><span class="project-type">Identity / 2025</span></div></a>
+					<a class="project" href="#contact"><div class="project-image"><img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1000&q=85" alt="Light-filled creative studio" /></div><div class="project-meta"><span class="project-name">Common Ground</span><span class="project-type">Digital / 2024</span></div></a>
+					<a class="project" href="#contact"><div class="project-image"><img src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1000&q=85" alt="Mountain landscape at sunrise" /></div><div class="project-meta"><span class="project-name">Outside In</span><span class="project-type">Campaign / 2024</span></div></a>
+					<a class="project" href="#contact"><div class="project-image"><img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1000&q=85" alt="Team collaborating around a table" /></div><div class="project-meta"><span class="project-name">Work / Life</span><span class="project-type">Strategy / 2023</span></div></a>
+				</div>
+			</div>
+		</section>
+
+		<section class="shell about" id="about">
+			<h2>Thoughtful by default.</h2>
+			<div class="about-copy">
+				<p>I like the space between a clear idea and a beautiful detail. My work brings strategy, storytelling, and technology together without losing the human bit.</p>
+				<div class="facts"><div class="fact"><strong>8+</strong><span>years making</span></div><div class="fact"><strong>24</strong><span>brands launched</span></div><div class="fact"><strong>NYC</strong><span>based / remote</span></div></div>
+			</div>
+		</section>
+
+		<section class="contact" id="contact">
+			<div class="shell">
+				<p class="eyebrow">Have a good idea?</p>
+				<h2>Let's make it<br />real together.</h2>
+				<div class="contact-bottom"><p>Currently booking select projects for autumn 2026. Tell me a little about what you are working on.</p><div class="socials"><a href="mailto:hello@alexmorgan.studio">Email me</a><a href="#top">Back to top ↑</a></div></div>
+			</div>
+		</section>
+	</main>
+
+	<footer class="shell"><span>Alex Morgan Studio</span><span id="year"></span></footer>
+	<script>
+		const menuButton = document.querySelector('#menu-button');
+		const nav = document.querySelector('#nav-links');
+		menuButton.addEventListener('click', () => {
+			const isOpen = nav.classList.toggle('is-open');
+			menuButton.setAttribute('aria-expanded', isOpen);
+			menuButton.textContent = isOpen ? 'Close -' : 'Menu +';
+		});
+		document.querySelector('#year').textContent = new Date().getFullYear() + ' / All rights reserved';
+	</script>
+</body>
+</html>
